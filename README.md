@@ -36,3 +36,17 @@ The need to clean data and sometimes transform it.
 The consequences of bad data for the model.
 
 Data understanding is iterative; you learn more about your data the more you study it. 
+
+4. In this lesson, you have learned:
+
+The difference between descriptive and predictive models.
+
+The role of training sets and test sets.
+
+The importance of asking if the question has been answered.
+
+Why diagnostic measures tools are needed.
+
+The purpose of statistical significance tests.
+
+That modeling and evaluation are iterative processes.
