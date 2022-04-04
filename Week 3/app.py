@@ -40,8 +40,20 @@ app.layout = html.Div(children=[html.H1('SpaceX Launch Records Dashboard',
 
                                 html.P("Payload range (Kg):"),
                                 # TASK 3: Add a slider to select payload range
-                                #dcc.RangeSlider(id='payload-slider',...)
-
+                                dcc.RangeSlider(id='payload-slider',
+                                    min=0, max=10000, step=1000,
+                                    marks={0: '0',
+                                        1000: '1000',
+                                        2000: '2000',
+                                        3000: '3000',
+                                        4000: '4000',
+                                        5000: '5000',
+                                        6000: '6000',
+                                        7000: '7000',
+                                        8000: '8000',
+                                        9000: '9000',
+                                        10000: '10000'},
+                                    value=[min_payload, max_payload]),
                                 # TASK 4: Add a scatter chart to show the correlation between payload and launch success
                                 html.Div(dcc.Graph(id='success-payload-scatter-chart')),
                                 ])
@@ -62,7 +74,25 @@ def get_piew_chart(entered_site):
     return fig
 # TASK 4:
 # Add a callback function for `site-dropdown` and `payload-slider` as inputs, `success-payload-scatter-chart` as output
-
+@app.callback(Output(component_id='success-payload-scatter-chart', component_property='figure'),
+    [Input(component_id='site-dropdown', component_property='value'), 
+    Input(component_id="payload-slider", component_property="value")]
+)
+def get_scatter_plot(site, slider):
+    low, high = slider
+    mask = ((spacex_df["Payload Mass (kg)"] > low )& (spacex_df["Payload Mass (kg)"] <high))
+    filtered_df = spacex_df[mask]
+    if site == "ALL":
+        fig = px.scatter(filtered_df, x="Payload Mass (kg)", y ="class",
+         color = 'Booster Version Category',
+         hover_data=['Booster Version'],
+         title = 'Payload Vs Class For All Sites')
+    else:
+        filtered_df = filtered_df[spacex_df["Launch Site"]==site]
+        fig = px.scatter(filtered_df, x="Payload Mass (kg)", y ="class",
+         color = 'Booster Version Category',
+         title = 'Payload Vs Class For ' + site)
+    return fig
 
 # Run the app
 if __name__ == '__main__':
